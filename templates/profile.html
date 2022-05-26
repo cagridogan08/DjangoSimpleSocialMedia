@@ -1,0 +1,175 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+	<title>Profile - {{user_profile.user.username}}</title>
+   <!-- <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16"> -->
+    
+    <link rel="stylesheet" href="{% static 'css/main.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/color.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+
+</head>
+<body>
+    
+<!--<div class="se-pre-con"></div>-->
+<div class="theme-layout">
+	
+	</div>
+	
+	<section>
+			<div class="feature-photo">
+				
+				<figure><img src="{% static 'images\timeline-1.jpg' %}" style="height: 200px; width: 100%;"alt=""></figure>
+				<form action="/follow" method="POST">
+					{% csrf_token %}
+					<div class="add-btn">
+						
+					<span style="color: white; font-size: 27px; margin-right: 520px;"><b><u><a href="/">Home</a></u></b></span>
+					<li class="admin-name">
+                        <h5 style="color: black;white-space: nowrap; width: 110px; font-size: 27px;"><b>@{{user_profile.user.username}}</b><!--<i class="fa fa-check-circle" style="color: #48dbfb;" aria-hidden="true"></i>--></h5>
+                        <!--<span>Group Admin</span>-->
+                      </li>
+					{% if user_post_length == 0 %}
+					<span style="color: white; font-size: 27px;"><b>No Post</b></span>
+					{% elif user_post_length == 1 %}
+					<span style="color: white; font-size: 27px;"><b>{{user_post_length}} Post</b></span>
+					{% else %}
+					<span style="color: white; font-size: 27px;"><b>{{user_post_length}} Posts</b></span>
+					{% endif %}
+
+					{% if user_followers == 0 or user_followers == 1 %}
+					<span style="color: white; font-size: 27px;"><b>{{user_followers}} follower</b></span>
+					{% else %}
+					<span style="color: white; font-size: 27px;"><b>{{user_followers}} followers</b></span>
+					{% endif %}
+
+
+					<span style="color: white; font-size: 27px;"><b>{{user_following}} following</b></span>
+
+					<input type="hidden" value="{{user.username}}" name="follower" />
+					<input type="hidden" value="{{user_object.username}}" name="user" />
+
+					{% if user_object.username == user.username %}
+					<a href="/settings" data-ripple="">Account Settings</a>
+					{% else %}
+					<a data-ripple=""><button type="submit" style="background-color: #ffc0cb; border: #ffc0cb;">{{button_text}}</button></a>
+					{% endif %}
+
+					</div>
+				</form>
+
+				<!-- <form class="edit-phto">
+					<i class="fa fa-camera-retro"></i>
+					<label class="fileContainer">
+						Upload Cover Photo
+					<input type="file"/>
+					</label>
+				</form> -->
+				<div class="container-fluid">
+					
+					<div class="row merged">
+						<div class="col-lg-2 col-sm-3">
+							<div class="user-avatar">
+								<figure> 
+									
+									<img src="{{user_profile.profileimg.url}}" style="height: 200px; width: 100%;" alt="">
+									<form class="edit-phto">
+										<i class="fa fa-camera-retro"></i>
+										<label class="fileContainer">
+											<a href="/settings">Edit Profile</a>
+										</label>
+									</form>
+								</figure>
+							</div>
+						</div>
+						<div class="col-lg-10 col-sm-9">
+							<div class="bio">
+								About User: {{user_profile.about_user}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section><!-- top area -->
+		<section>
+			
+		</section>
+		
+	<section>
+		<div class="gap gray-bg">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row" id="page-contents">
+							<div class="col-lg-3">
+								<aside class="sidebar static">
+									
+									
+									
+								</aside>
+							</div><!-- sidebar -->
+							
+							<div class="col-lg-6">
+								
+								<div class="central-meta">
+									{% for post in user_posts %}
+									<div class="bg-white w-56 shadow-md mx-auto p-2 mt-12 rounded-md text-gray-500 hidden text-base border border-gray-100  " uk-drop="mode: hover;pos: top-right">
+
+										<p>
+											<h3>{{post.post_message}}</h3><h6>{{post.created_at}}</h6>
+										</p>
+
+										<div class="py-3 px-4 space-y-3">
+											<div class="flex space-x-4 lg:font-bold">
+												<div class="p-2 rounded-full text-black">
+													<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="25" height="25" class="">
+														<path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+													</svg>
+													{% if post.like_count == 0 %}
+													<p>No likes</p>
+													{% elif post.like_count == 1 %}
+													<p>Liked by {{post.like_count}} person</p>
+													{% else %}
+													<p>Liked by {{post.like_count}} people</p>
+													{% endif %}
+												</div>
+											</div>
+										</div>
+
+									</div>
+									{% endfor %}
+									<!--<div class="lodmore"><button class="btn-view btn-load-more"></button></div>-->
+								</div><!-- posts -->
+								
+							</div><!-- centerl meta -->
+							
+							<div class="col-lg-3">
+								<aside class="sidebar static">
+									
+								</aside>
+							</div><!-- sidebar -->
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>	
+	</section>
+
+	
+	
+	<script data-cfasync="false" src="{% static '../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js' %}"></script><script src="{% static 'js/main.min.js' %}"></script>
+	<script src="{% static 'js/script.js' %}"></script>
+
+</body>	
+
+
+</html>
